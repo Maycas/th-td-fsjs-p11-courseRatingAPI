@@ -4,6 +4,11 @@
 var express = require('express');
 var morgan = require('morgan');
 var mongoose = require('mongoose');
+var bodyParser = require('body-parser');
+
+//routes
+var userRoutes = require('./routes/users');
+var courseRoutes = require('./routes/courses');
 
 var app = express();
 
@@ -13,16 +18,29 @@ var db = mongoose.connection;
 // mongodb connection error
 db.on('error', console.error.bind(console, 'connection error:'));
 // mongodb connection successful
-db.on('open', console.log.bind(console, 'db connection established successfully'));
+db.once('open', function (err) {
+  //require('./utils/seeder.js');
+  console.log.bind(console, 'db connection established successfully')
+});
 
 // set our port
 app.set('port', process.env.PORT || 5000);
+
+// parse incoming requests
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
 // morgan gives us http request logging
 app.use(morgan('dev'));
 
 // setup our static route to serve files from the "public" folder
 app.use('/', express.static('public'));
+
+// include routes
+app.use('/api', userRoutes);
+app.use('/api', courseRoutes);
 
 // catch 404 and forward to global error handler
 app.use(function (req, res, next) {
@@ -34,9 +52,8 @@ app.use(function (req, res, next) {
 // Express's global error handler
 app.use(function (err, req, res, next) {
   res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
+  res.json({
+    message: err.message
   });
 });
 
