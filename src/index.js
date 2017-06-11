@@ -53,7 +53,16 @@ app.use(function (req, res, next) {
 // Express's global error handler
 app.use(function (err, req, res, next) {
   res.status(err.status || 500);
-  res.json(err);
+  if (err.errors) {
+    // Errors coming from Mongoose
+    res.json(err);
+  } else {
+    // Errors coming from middleware
+    res.json({
+      _message: err.message,
+      status: err.status
+    });
+  }
 });
 
 // start listening on our port
