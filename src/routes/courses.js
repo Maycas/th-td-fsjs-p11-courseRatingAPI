@@ -31,7 +31,17 @@ router.get('/courses', function (req, res, next) {
 
 router.get('/courses/:courseId', function (req, res, next) {
     Course.findById(req.params.courseId)
-        .populate('user reviews')
+        .lean()
+        .populate('user', 'fullName') // Only show user's full name in the user field
+        .populate({
+            path: 'reviews',
+            model: 'Review',
+            populate: {
+                path: 'user',
+                model: 'User',
+                select: 'fullName'
+            }
+        }) // Deep populate the user's name in the review with the user's fullName
         .exec(function (err, course) {
             if (err) return next(err);
             res.json(course);
