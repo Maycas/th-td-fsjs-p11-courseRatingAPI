@@ -14,12 +14,13 @@ var app = express();
 
 // set database connection
 mongoose.connect('mongodb://localhost:27017/courseReview');
+mongoose.Promise = global.Promise; // solves deprecation warning problem by plugging the global Javascript promise library (DeprecationWarning: Mongoose: mpromise (mongoose's default promise library) is deprecated, plug in your own promise library instead: http://mongoosejs.com/docs/promises.html)
 var db = mongoose.connection;
 // mongodb connection error
 db.on('error', console.error.bind(console, 'connection error:'));
 // mongodb connection successful
 db.once('open', function (err) {
-  //require('./utils/seeder.js');
+  require('./utils/seeder.js');
   console.log.bind(console, 'db connection established successfully')
 });
 
@@ -52,9 +53,7 @@ app.use(function (req, res, next) {
 // Express's global error handler
 app.use(function (err, req, res, next) {
   res.status(err.status || 500);
-  res.json({
-    message: err.message
-  });
+  res.json(err);
 });
 
 // start listening on our port

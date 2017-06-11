@@ -57,7 +57,7 @@ UserSchema.statics.authentication = function (emailAddress, password, callback) 
             if (result) {
                 return callback(null, user); // no error
             } else {
-                var error = new Error('Unauthorised');
+                var error = new Error('Unauthorized');
                 error.status = 401;
                 return callback(error);
             }
