@@ -1,5 +1,7 @@
 'use strict';
 
+process.env.NODE_ENV = 'test';
+
 // load modules
 var express = require('express');
 var morgan = require('morgan');
@@ -20,8 +22,8 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 // mongodb connection successful
 db.once('open', function (err) {
-  require('./utils/seeder.js');
-  console.log.bind(console, 'db connection established successfully')
+  console.log.bind(console, 'db connection established successfully');
+  //require('./utils/seeder.js');
 });
 
 // set our port
@@ -69,3 +71,5 @@ app.use(function (err, req, res, next) {
 var server = app.listen(app.get('port'), function () {
   console.log('Express server is listening on port ' + server.address().port);
 });
+
+module.exports = server;
