@@ -29,11 +29,11 @@ function mongooseConnectAndSetup(done) {
 }
 
 // Test suites
-describe('User credentials', function () {
+describe('GET /api/users', function () {
 
     before(mongooseConnectAndSetup);
 
-    it('/api/user should return the corresponding user document when using the right credentials', function (done) {
+    it('should return the corresponding user document when using the right credentials', function (done) {
         chai.request(server)
             .get('/api/users')
             .auth('sam@jones.com', 'password')
@@ -45,10 +45,9 @@ describe('User credentials', function () {
             });
     });
 
-    it('/api/courses/:courseId should return a 401 status error if accessing with invalid credentials', function (done) {
-        var courseId = '57029ed4795118be119cc43d';
+    it('should return a 401 status error if accessing with invalid credentials', function (done) {
         chai.request(server)
-            .get('/api/courses/' + courseId)
+            .get('/api/users')
             .auth('sam@jones.com', 'wrong password')
             .end(function (err, res) {
                 expect(res.status).to.equal(401);

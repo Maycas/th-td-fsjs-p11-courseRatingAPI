@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon ./src/index.js localhost 5000",
     "inspect": "nodemon --inspect ./src/index.js localhost 5000",
-    "test": "mocha src/test/*.js --timeout 5000"
+    "test": "mocha src/test/*.js"
   },
   "author": "",
   "license": "ISC",
